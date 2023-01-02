@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from datetime import datetime
 import pyperclip
 import time
@@ -22,7 +23,10 @@ chooseRank = input("Rank 1-5: ")
 username = input("Username: ")
 password = input("Password: ")
 
-driver = webdriver.Safari(executable_path = '/Library/Apple/System/Library/CoreServices/SafariSupport.bundle/Contents/MacOS/safaridriver')
+caps = DesiredCapabilities().SAFARI
+caps["pageLoadStrategy"] = "none"
+
+driver = webdriver.Safari(desired_capabilities=caps, executable_path = '/Library/Apple/System/Library/CoreServices/SafariSupport.bundle/Contents/MacOS/safaridriver')
 driver.set_window_size(1440, 820)
 driver.get("https://www.govvi.com/adminlogin")
 
@@ -38,8 +42,9 @@ done = False
 pageNo = 1
 found = False
 final = ''
+
 while done == False or found == False:
-    pageLinks = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="ranktable_paginate"]/ul')))
+    pageLinks = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="ranktable_wrapper"]/div[2]')))
     table = driver.find_element(By.XPATH, '//*[@id="ranktable"]/tbody')
     for row in table.find_elements(By.TAG_NAME, 'tr'):
         cell = row.find_elements(By.TAG_NAME, 'td')
